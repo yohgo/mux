@@ -16,7 +16,6 @@ func NewRouter(routes Routes) *mux.Router {
 			Path(route.Path).
 			Name(route.Name).
 			Handler(route.HandlerFunc)
-
 	}
 
 	return router
