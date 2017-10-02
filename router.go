@@ -1,6 +1,7 @@
 package mux
 
 import (
+	"net/http"
 	"strings"
 
 	"github.com/gorilla/mux"
@@ -19,4 +20,17 @@ func NewRouter(routes Routes) *mux.Router {
 	}
 
 	return router
+}
+
+// Handle is a middleware function that executes operations on a request before passing it to the main handler
+func Handle(handler http.Handler, operations ...Operation) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		for _, operation := range operations {
+			if !operation(w, r) {
+				return
+			}
+		}
+
+		handler.ServeHTTP(w, r)
+	})
 }
